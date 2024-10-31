@@ -39,7 +39,11 @@ fun CalculatorView(modifier: Modifier = Modifier) {
     }
 
     fun setDisplay(value : Double){
-        display = value.toString()
+        if (value % 1 == 0.0){
+            display = value.toInt().toString()
+        }else {
+            display = value.toString()
+        }
     }
 
     val onClickOperation : (String) -> Unit = { op ->
