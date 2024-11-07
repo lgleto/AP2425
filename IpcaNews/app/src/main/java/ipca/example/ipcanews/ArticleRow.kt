@@ -21,8 +21,8 @@ import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
 import java.util.Date
 
 @Composable
-fun ArticleRowView(article: Article) {
-    Row {
+fun ArticleRowView(modifier: Modifier = Modifier, article: Article) {
+    Row (modifier = modifier){
         AsyncImage(
             modifier = Modifier.size(100.dp),
             model = article.urlToImage,
