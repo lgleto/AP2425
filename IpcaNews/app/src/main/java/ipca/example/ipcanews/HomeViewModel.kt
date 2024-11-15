@@ -13,11 +13,20 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
+data class HomeViewState(
+    var articles : ArrayList<Article> = arrayListOf<Article>(),
+    var isLoading : Boolean = false,
+    var error :String? = null
+)
+
+
 class HomeViewModel : ViewModel() {
 
-    var articles = mutableStateOf(arrayListOf<Article>())
+    var state = mutableStateOf(HomeViewState())
+        private set
 
     fun fetchArticles() {
+        state.value = state.value.copy(isLoading = true)
         val client = OkHttpClient()
         val request = Request.Builder()
             .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
@@ -26,10 +35,15 @@ class HomeViewModel : ViewModel() {
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
+                state.value = state.value.copy(
+                    isLoading = false,
+                    error = e.message.toString()
+                )
             }
 
             override fun onResponse(call: Call, response: Response) {
                 response.use {
+                    state.value = state.value.copy(isLoading = false)
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
                     val result = response.body!!.string()
                     var articlesResult = arrayListOf<Article>()
@@ -41,7 +55,9 @@ class HomeViewModel : ViewModel() {
                             val articleObject = articlesArray.getJSONObject(index)
                             articlesResult.add(Article.fromJson(articleObject))
                         }
-                        articles.value = articlesResult
+                        state.value = state.value.copy(
+                            articles = articlesResult
+                        )
                     }
                 }
             }
