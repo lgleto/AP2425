@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
                                                 putExtra(Intent.EXTRA_TEXT, urlToShare)
                                                 type = "text/plain"
                                             }
-
                                             startActivity(Intent.createChooser(sendIntent, null))
                                         },
                                         painter = painterResource(id = R.drawable.baseline_share_24),
@@ -91,10 +90,8 @@ class MainActivity : ComponentActivity() {
                                 url = url?:"no_url")
                         }
                     }
-
                 }
             }
         }
     }
-
 }

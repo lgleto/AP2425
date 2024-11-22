@@ -1,9 +1,6 @@
 package ipca.example.ipcanews
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import okhttp3.Call
 import okhttp3.Callback
@@ -18,7 +15,6 @@ data class HomeViewState(
     var isLoading : Boolean = false,
     var error :String? = null
 )
-
 
 class HomeViewModel : ViewModel() {
 
