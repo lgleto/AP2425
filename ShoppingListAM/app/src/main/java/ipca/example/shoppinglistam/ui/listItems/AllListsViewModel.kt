@@ -36,17 +36,9 @@ class AllListsViewModel : ViewModel() {
 
                 val listItems = ArrayList<ListItem>()
                 for (doc in value!!) {
-                    val docId = doc.id
-                    val name = doc.getString("name")
-                    val icon = 1
-
-                    listItems.add(
-                        ListItem(
-                            docId = docId,
-                            name = name,
-                            icon = icon ?: 0
-                        )
-                    )
+                    val listItem = doc.toObject(ListItem::class.java)
+                    listItem.docId = doc.id
+                    listItems.add(listItem)
                 }
 
                 state = state.copy(

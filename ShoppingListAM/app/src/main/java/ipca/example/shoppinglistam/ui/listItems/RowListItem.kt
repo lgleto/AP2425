@@ -31,12 +31,23 @@ fun RowListItem(
             verticalAlignment = Alignment.CenterVertically
         )
         {
-            Icon(painter = painterResource(R.drawable.ic_launcher_foreground), contentDescription = null)
+            Icon(painter = painterResource(getResourceIcon( listItem.icon?:0L)),
+                contentDescription = null)
+
             Text(
                 text = listItem.name ?: ""
             )
         }
     }
+}
+
+fun getResourceIcon( iconRef : Long)  :  Int{
+   return when (iconRef) {
+        0L -> R.drawable.baseline_architecture_24
+        1L -> R.drawable.baseline_add_home_24
+        2L -> R.drawable.baseline_account_balance_wallet_24
+       else -> R.drawable.ic_launcher_foreground
+   }
 }
 
 @Preview(showBackground = true)
@@ -46,7 +57,7 @@ fun RowListItemPreview() {
         RowListItem(
             listItem = ListItem(
                 name = "Escola",
-                icon = R.drawable.ic_launcher_foreground
+                icon = 0L
             )
         )
     }
