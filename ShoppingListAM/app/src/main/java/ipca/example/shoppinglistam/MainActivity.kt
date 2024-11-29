@@ -16,6 +16,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import ipca.example.shoppinglistam.ui.listItems.AddListView
 import ipca.example.shoppinglistam.ui.listItems.AllListView
+import ipca.example.shoppinglistam.ui.listItems.items.ItemsView
 import ipca.example.shoppinglistam.ui.login.LoginView
 import ipca.example.shoppinglistam.ui.theme.ShoppingListAMTheme
 
@@ -31,6 +32,12 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                         navController = navController,
                         startDestination = "login") {
+                        composable("items/{listId}"){
+                            val listId = it.arguments?.getString("listId")
+                            ItemsView(
+                                listId = listId!!,
+                                navController = navController)
+                        }
                         composable("all_lists"){
                             AllListView(navController = navController)
                         }

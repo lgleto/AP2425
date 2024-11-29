@@ -99,15 +99,12 @@ fun AddListView(modifier: Modifier = Modifier,
                         painter = painterResource(R.drawable.baseline_account_balance_wallet_24),
                         contentDescription = "Trabalho")
                 }
-
-
-
             }
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { viewModel.add {
+                onClick = {
+                    viewModel.add()
                     navController.popBackStack()
-                }
                 }
             ) {
                 Text(text = "ADD")

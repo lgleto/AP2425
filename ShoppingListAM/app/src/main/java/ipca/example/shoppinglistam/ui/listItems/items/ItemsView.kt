@@ -1,4 +1,4 @@
-package ipca.example.shoppinglistam.ui.listItems
+package ipca.example.shoppinglistam.ui.listItems.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,40 +18,41 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import ipca.example.shoppinglistam.R
-import ipca.example.shoppinglistam.models.ListItem
+import ipca.example.shoppinglistam.models.Item
 import ipca.example.shoppinglistam.ui.theme.ShoppingListAMTheme
 
-@Composable
-fun AllListView(modifier: Modifier = Modifier,
-                navController : NavController = rememberNavController(),
-                onClickListItem: (String?) -> Unit = {}
-) {
 
-    val viewModel : AllListsViewModel = viewModel()
+@Composable
+fun ItemsView(
+    modifier: Modifier = Modifier,
+    listId : String,
+    navController: NavController){
+
+    val viewModel : ItemsViewModel = viewModel()
     val state = viewModel.state
 
 
-    AllListViewContent(
+    ItemsViewContent(
+        modifier = modifier,
         state = state,
         navController = navController,
-        onClickListItem = { listId ->
-            navController.navigate("items/$listId")
+        onCheckItem = {
+            viewModel.check(listId, it)
         }
     )
 
     LaunchedEffect(key1 = Unit) {
-        viewModel.loadAllLists()
+        viewModel.getAll(listId)
     }
-
 }
 
 @Composable
-fun AllListViewContent(modifier: Modifier = Modifier,
-                       navController : NavController = rememberNavController(),
-                       state: AllListState,
-                       onClickListItem: (String?) -> Unit = {}
-) {
+fun ItemsViewContent(
+    modifier: Modifier = Modifier,
+    state : ItemsState,
+    navController : NavController,
+    onCheckItem : (Item)->Unit
+){
     Box(modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd) {
         if (state.isLoading) {
@@ -69,44 +70,36 @@ fun AllListViewContent(modifier: Modifier = Modifier,
         } else {
             LazyColumn(modifier = modifier.fillMaxSize()) {
                 itemsIndexed(
-                    items = state.listItems
+                    items = state.items
                 ) { index, item ->
-                    RowListItem(
-                        modifier = Modifier
-                            .clickable {
-                                onClickListItem(item.docId)
-                            },
-                        listItem = item
-                    )
+                    RowItem(item = item) {
+                        onCheckItem(item)
+                    }
                 }
             }
         }
         Button(
             modifier = Modifier.padding(16.dp),
             onClick = {
-            navController.navigate("add_list")
-        }) {
-            Text("ADD LIST")
+                navController.navigate("add_item")
+            }) {
+            Text("ADD ITEM")
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun AllListViewPreview() {
+fun ItemsViewPreview(){
     ShoppingListAMTheme {
-        AllListViewContent(
-            state =
-            AllListState(
-                isLoading = false,
-                error = "internwr error",
-                listItems = listOf(
-                    ListItem(
-                        name = "Escola",
-                        icon = 0L
-                    )
-            )
-            )
+        ItemsViewContent(
+            state = ItemsState(
+                items = arrayListOf(Item("", "Bataras", 10.0, false)),
+                error = null,
+                isLoading = false
+            ),
+            navController = rememberNavController(),
+            onCheckItem = {}
         )
     }
 }

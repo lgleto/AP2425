@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import ipca.example.shoppinglistam.models.ListItem
+import ipca.example.shoppinglistam.repository.ListItemRepository
 
 data class AllListState(
     val listItems: List<ListItem> = listOf(),
@@ -16,36 +17,26 @@ data class AllListState(
 
 class AllListsViewModel : ViewModel() {
 
-    val db = Firebase.firestore
-
     var state by mutableStateOf(AllListState())
         private set
 
     fun loadAllLists() {
-
         state = state.copy(isLoading = true)
-
-        db.collection("listItems")
-            .addSnapshotListener { value, e ->
-                if (e != null) {
-                    state = state.copy(
-                        isLoading = false,
-                        error = e.message)
-                    return@addSnapshotListener
-                }
-
-                val listItems = ArrayList<ListItem>()
-                for (doc in value!!) {
-                    val listItem = doc.toObject(ListItem::class.java)
-                    listItem.docId = doc.id
-                    listItems.add(listItem)
-                }
-
+        ListItemRepository.getAll { listItems, error ->
+            if (error != null) {
                 state = state.copy(
                     isLoading = false,
-                    error = null,
-                    listItems = listItems)
+                    error = error)
+                return@getAll
             }
+            state = state.copy(
+                isLoading = false,
+                listItems = listItems)
+        }
+    }
+
+    fun removeList(listId : String) {
+        ListItemRepository.remove(listId)
     }
 
 }

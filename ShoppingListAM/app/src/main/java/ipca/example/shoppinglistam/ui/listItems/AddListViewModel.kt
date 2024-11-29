@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import ipca.example.shoppinglistam.models.ListItem
-
+import ipca.example.shoppinglistam.repository.ListItemRepository
 
 
 data class AddListState(
@@ -18,8 +18,6 @@ data class AddListState(
 )
 
 class AddListViewModel : ViewModel() {
-
-    val db = Firebase.firestore
 
     var state by mutableStateOf(AddListState())
         private set
@@ -32,23 +30,13 @@ class AddListViewModel : ViewModel() {
         state = state.copy( icon = newValue)
     }
 
-    fun add(onSuccessAdd:()->Unit) {
-
+    fun add() {
         state = state.copy(isLoading = true)
-
         val listItem = ListItem(
             name = state.name,
             icon = state.icon
         )
-
-        db.collection("listItems")
-            .add(listItem)
-            .addOnSuccessListener { documentReference ->
-                onSuccessAdd()
-            }
-            .addOnFailureListener { e ->
-
-            }
+        ListItemRepository.add(listItem)
     }
 
 }
