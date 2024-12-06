@@ -1,4 +1,4 @@
-package ipca.example.ipcanews
+package ipca.example.ipcanews.ui.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,11 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ipca.example.ipcanews.ArticleRowView
 import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
 
 @Composable
 fun HomeView(modifier: Modifier = Modifier,
-             onArticleClick: (String, String) -> Unit = { _, _ -> } ){
+             onArticleClick: (String) -> Unit = { _ -> } ){
 
     val viewModel : HomeViewModel = viewModel()
     val state = viewModel.state
@@ -38,8 +39,7 @@ fun HomeView(modifier: Modifier = Modifier,
                 ){index, article ->
                     ArticleRowView(modifier = Modifier
                         .clickable {
-                            onArticleClick(article.title?: "",
-                                article.url?.encodeUrl()?: "")
+                            onArticleClick(article.toJsonString())
                         },
                         article = article)
                 }

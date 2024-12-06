@@ -1,7 +1,8 @@
-package ipca.example.ipcanews
+package ipca.example.ipcanews.ui.home
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import ipca.example.ipcanews.models.Article
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient

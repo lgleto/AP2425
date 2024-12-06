@@ -19,3 +19,8 @@ fun Date.toShortString() : String {
     val format = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return format.format(this)
 }
+
+fun Date.toServerString() : String {
+    val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    return format.format(this)
+}
