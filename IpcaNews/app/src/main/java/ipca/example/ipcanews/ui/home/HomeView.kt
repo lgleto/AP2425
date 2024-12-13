@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ipca.example.ipcanews.ArticleRowView
 import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
@@ -20,7 +21,7 @@ import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
 fun HomeView(modifier: Modifier = Modifier,
              onArticleClick: (String) -> Unit = { _ -> } ){
 
-    val viewModel : HomeViewModel = viewModel()
+    val viewModel : HomeViewModel = hiltViewModel()
     val state = viewModel.state
 
     Box(modifier = modifier.fillMaxSize(),

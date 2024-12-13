@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 fun MyTopAppBar(article: Article? ){
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     TopAppBar(
         modifier = Modifier.fillMaxWidth(),
@@ -59,7 +61,7 @@ fun MyTopAppBar(article: Article? ){
                 )
                 IconButton(
                     onClick = {
-                        GlobalScope.launch(Dispatchers.IO) {
+                        scope.launch(Dispatchers.IO) {
                             AppDatabase.getInstance(context)?.articleDao()?.insert(article)
                         }
                     }

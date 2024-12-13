@@ -21,7 +21,7 @@ import ipca.example.shoppinglistam.ui.theme.ShoppingListAMTheme
 
 @Composable
 fun LoginView(modifier: Modifier = Modifier,
-              navController: NavHostController = rememberNavController()
+              navController: NavHostController
 ){
     Box (modifier = modifier
         .fillMaxSize(),
@@ -73,6 +73,6 @@ fun LoginView(modifier: Modifier = Modifier,
 @Composable
 fun LoginViewPreview(){
     ShoppingListAMTheme {
-        LoginView()
+        LoginView(navController = rememberNavController())
     }
 }

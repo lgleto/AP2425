@@ -2,7 +2,14 @@ package ipca.example.ipcanews.ui.home
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import ipca.example.ipcanews.models.Article
+import ipca.example.ipcanews.repositories.ArticlesRepository
+import ipca.example.ipcanews.repositories.ResultWrapper
+import ipca.example.ipcanews.ui.favorites.FavoritesViewState
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -10,54 +17,45 @@ import okhttp3.Request
 import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
+import javax.inject.Inject
 
 data class HomeViewState(
-    var articles : ArrayList<Article> = arrayListOf<Article>(),
+    var articles : List<Article> = arrayListOf<Article>(),
     var isLoading : Boolean = false,
     var error :String? = null
 )
 
-class HomeViewModel : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private var articlesRepository : ArticlesRepository
+)
+    : ViewModel() {
 
     var state = mutableStateOf(HomeViewState())
         private set
 
     fun fetchArticles() {
-        state.value = state.value.copy(isLoading = true)
-        val client = OkHttpClient()
-        val request = Request.Builder()
-            .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
-                state.value = state.value.copy(
-                    isLoading = false,
-                    error = e.message.toString()
-                )
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    state.value = state.value.copy(isLoading = false)
-                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
-                    val result = response.body!!.string()
-                    var articlesResult = arrayListOf<Article>()
-                    val jsonObject = JSONObject(result)
-                    val status = jsonObject.getString("status")
-                    if (status == "ok") {
-                        val articlesArray = jsonObject.getJSONArray("articles")
-                        for (index in 0 until articlesArray.length()) {
-                            val articleObject = articlesArray.getJSONObject(index)
-                            articlesResult.add(Article.fromJson(articleObject))
-                        }
+        articlesRepository.fetchArticles()
+            .onEach { result ->
+                when(result){
+                    is ResultWrapper.Success -> {
                         state.value = state.value.copy(
-                            articles = articlesResult
+                            isLoading = false,
+                            articles = result.data?: emptyList()
+                        )
+                    }
+                    is ResultWrapper.Loading -> {
+                        state.value = state.value.copy(
+                            isLoading = true
+                        )
+                    }
+                    is ResultWrapper.Error -> {
+                        state.value = state.value.copy(
+                            isLoading = false,
+                            error = result.message
                         )
                     }
                 }
-            }
-        })
+            }.launchIn(viewModelScope)
     }
 }

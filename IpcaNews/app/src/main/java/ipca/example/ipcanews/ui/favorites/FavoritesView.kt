@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ipca.example.ipcanews.ArticleRowView
 import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
@@ -21,10 +22,9 @@ import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
 fun FavoritesView(modifier: Modifier = Modifier,
              onArticleClick: (String) -> Unit = { _ -> } ){
 
-    val viewModel : FavoritesViewModel = viewModel()
+    val viewModel : FavoritesViewModel = hiltViewModel()
     val state = viewModel.state
 
-    val context = LocalContext.current
 
     Box(modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -51,7 +51,7 @@ fun FavoritesView(modifier: Modifier = Modifier,
 
 
     LaunchedEffect (key1 = true) {
-        viewModel.fetchArticles(context)
+        viewModel.fetchArticles()
     }
 
 }

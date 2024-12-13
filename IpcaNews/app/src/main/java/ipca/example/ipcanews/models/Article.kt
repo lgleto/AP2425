@@ -37,7 +37,7 @@ class Article(
         val jsonObject = JSONObject()
         jsonObject.put("title"       , title       )
         jsonObject.put("description" , description )
-        jsonObject.put("url"         , url?.encodeUrl())
+        jsonObject.put("url"         , url.encodeUrl())
         jsonObject.put("urlToImage"  , urlToImage?.encodeUrl())
         jsonObject.put("publishedAt" , publishedAt?.toServerString() )
 

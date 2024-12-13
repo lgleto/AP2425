@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.AndroidEntryPoint
 import ipca.example.ipcanews.models.Article
 import ipca.example.ipcanews.ui.components.MyBottomBar
 import ipca.example.ipcanews.ui.components.MyTopAppBar
@@ -25,6 +26,7 @@ import ipca.example.ipcanews.ui.home.HomeView
 import ipca.example.ipcanews.ui.theme.IpcaNewsTheme
 import org.json.JSONObject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
